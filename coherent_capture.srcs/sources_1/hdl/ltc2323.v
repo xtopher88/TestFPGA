@@ -55,19 +55,16 @@ module ltc2323(
     assign next_data2_out[0] = sdo2;
     
     // assign the data output to be a concatination of the two input shift register
-    assign data_out = {sdo2, sdo1};
+    assign data_out = {data2_out, data1_out};
     
-    // use a counter to run each cycle for the CNV, Data Shifting, and output signals, need to count to 42
-    assign next_counter = (counter < 42) && enable ? counter + 1 : 6'b0;
+    // use a counter to run each cycle for the CNV, Data Shifting, and output signals, need to count to 0 to 41
+    assign next_counter = (counter < 41) ? (counter + 1) : 6'b0;
     
     // if the counter is between 1 and 8 the conversion output is high
     assign cnv = (counter >= 1) && (counter <= 8) ? 1'b1 : 1'b0; 
     
     // run the spi transfer from cycles 10 to 42, 
-    assign sck_next = (counter >= 10) && (counter <= 42) ? ~sck : 1'b1; 
-    
-    
-    
+    assign sck_next = (counter >= 10) ? ~sck : 1'b1; 
     
     // generate the internal counter and SPI clock
     always @(posedge sys_clock)
@@ -80,8 +77,8 @@ module ltc2323(
     else
         begin
         // reset the status of this module when not enabled
-        counter <= 0;
-        sck <= 0;
+        counter <= 1'b0;
+        sck <= 1'b1;
         end
     end
     

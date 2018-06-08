@@ -18,10 +18,10 @@
     output [15:0] led,
      
 //ADC Control Lines
-    output sdo_1_p,
-    output sdo_1_n,
-    output sdo_2_p,
-    output sdo_2_n,
+    input sdo_1_p,
+    input sdo_1_n,
+    input sdo_2_p,
+    input sdo_2_n,
     output sck_p,
     output sck_n,
     input clk_out_p,
@@ -33,24 +33,31 @@
 
     wire master_clk;
     wire enable = sw[0];
-
+    
     assign led[15:0] = sw[15:0];
-    assign stimulus = master_clk;
-    assign enable = 1;
 
-     OBUFDS #(
+    IBUFDS #(
+    .CAPACITANCE("DONT_CARE"),
+    .DIFF_TERM("FALSE"),
+    .IBUF_DELAY_VALUE("0"),
+    .IFD_DELAY_VALUE("AUTO"),
     .IOSTANDARD("DEFAULT")
-    ) OBUFDS_inst_sdo_1 (
-    .O(sdo_1_p),
-    .OB(sdo_1_n),
-    .I(sdo_1));
+    ) IBUFDS_inst_sdo_1 (
+    .O(sdo_1),
+    .I(sdo_1_p),
+    .IB(sdo_1_n));
 
-     OBUFDS #(
+
+    IBUFDS #(
+    .CAPACITANCE("DONT_CARE"),
+    .DIFF_TERM("FALSE"),
+    .IBUF_DELAY_VALUE("0"),
+    .IFD_DELAY_VALUE("AUTO"),
     .IOSTANDARD("DEFAULT")
-    ) OBUFDS_inst_sdo_2 (
-    .O(sdo_2_p),
-    .OB(sdo_2_n),
-    .I(sdo_2));
+    ) IBUFDS_inst_sdo_2 (
+    .O(sdo_2),
+    .I(sdo_2_p),
+    .IB(sdo_2_n));
 
      OBUFDS #(
     .IOSTANDARD("DEFAULT")
@@ -65,7 +72,7 @@
     .IBUF_DELAY_VALUE("0"),
     .IFD_DELAY_VALUE("AUTO"),
     .IOSTANDARD("DEFAULT")
-    ) IBUFDS_inst_sdo_1 (
+    ) IBUFDS_inst_clk_out (
     .O(clk_out),
     .I(clk_out_p),
     .IB(clk_out_n));
@@ -81,6 +88,13 @@
     .sck(sck),
     .data_out()
     //output reg [12:0] data_address,
+    );
+    
+// the ADC conversion signal is running at 5MHz, this is the signal that the stimulus will be synchronized to
+    stimulus stimulus_signal(
+    .clk(cnv),
+    .enable(enable),
+    .stimulus(stimulus)
     );
 
 // the GUI design will have the clock and memory interface
