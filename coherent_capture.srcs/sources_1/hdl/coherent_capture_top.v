@@ -32,16 +32,11 @@
  );
 
     wire master_clk;
-//    wire sdo_1;
-//    wire sdo_2;
-//    wire sck;
-//    wire clk_out;
+    wire enable = sw[0];
 
     assign led[15:0] = sw[15:0];
-    assign sdo_1 = 0;
-    assign sdo_2 = 0;
-    assign sck = clk_out;
     assign stimulus = master_clk;
+    assign enable = 1;
 
      OBUFDS #(
     .IOSTANDARD("DEFAULT")
@@ -75,10 +70,25 @@
     .I(clk_out_p),
     .IB(clk_out_n));
 
+// ADC interface
+    ltc2323 adc_inst(
+    .sys_clock(master_clk),
+    .enable(enable),
+    .clkout(clk_out),
+    .sdo1(sdo_1),
+    .sdo2(sdo_2),
+    .cnv(cnv),
+    .sck(sck),
+    .data_out()
+    //output reg [12:0] data_address,
+    );
 
+// the GUI design will have the clock and memory interface
     design_1_wrapper design_1_wrapper_i
     (.input_clock(clk),
     .internal_clock(master_clk));
+    
+    
 
 always @(*) 
 begin
