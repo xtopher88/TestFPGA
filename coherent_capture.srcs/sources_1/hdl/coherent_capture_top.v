@@ -28,7 +28,9 @@
     input clk_out_n,
     output cnv,
     //Stimulus output
-    output stimulus
+    output stimulus,
+    //test output
+    output sck
  );
 
     wire master_clk;

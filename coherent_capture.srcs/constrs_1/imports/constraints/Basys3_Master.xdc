@@ -184,8 +184,9 @@ set_property PACKAGE_PIN K17 [get_ports cnv]
 #Sch name = JC2 IO_L11P_T1_SRCC_14
 set_property PACKAGE_PIN M18 [get_ports stimulus]					
 	set_property IOSTANDARD LVCMOS33 [get_ports stimulus]
-##Sch name = JC3 IO_L13P_T2_MRCC_14
-#set_property PACKAGE_PIN N17 [get_ports {JC[2]}]					
+#Sch name = JC3 IO_L13P_T2_MRCC_14
+set_property PACKAGE_PIN N17 [get_ports sck]		
+    set_property IOSTANDARD LVCMOS33 [get_ports sck]
 #	set_property IOSTANDARD LVCMOS33 [get_ports {JC[2]}]
 ##Sch name = JC4 IO_L14P_T2_SRCC_14
 #set_property PACKAGE_PIN P18 [get_ports {JC[3]}]					
